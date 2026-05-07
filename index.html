@@ -85,7 +85,7 @@
     }
 
     .footer-btn {
-      background: rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.06);
       border: 1px solid rgba(255,255,255,0.15);
       color: white;
       padding: 14px 28px;
@@ -96,6 +96,17 @@
 
     .footer-btn:hover {
       background: rgba(255,255,255,0.15);
+    }
+
+    /* SHINY BLUE OUTLINE */
+    .glow-btn {
+      border: 2px solid #3b82f6;
+      box-shadow: 0 0 12px #3b82f6, 0 0 25px rgba(59,130,246,0.5);
+    }
+
+    .glow-btn:hover {
+      box-shadow: 0 0 18px #3b82f6, 0 0 40px rgba(59,130,246,0.7);
+      transform: translateY(-2px);
     }
 
     .right {
@@ -118,30 +129,13 @@
       animation: float 4s ease-in-out infinite;
     }
 
-    .card1 {
-      top: 0;
-      right: 0;
-    }
-
-    .card2 {
-      left: 60px;
-      bottom: 120px;
-      animation-delay: 1s;
-    }
-
-    .card3 {
-      right: 100px;
-      bottom: 0;
-      animation-delay: 2s;
-    }
+    .card1 { top: 0; right: 0; }
+    .card2 { left: 60px; bottom: 120px; animation-delay: 1s; }
+    .card3 { right: 100px; bottom: 0; animation-delay: 2s; }
 
     @keyframes float {
-      0%,100% {
-        transform: translateY(0px);
-      }
-      50% {
-        transform: translateY(-18px);
-      }
+      0%,100% { transform: translateY(0px); }
+      50% { transform: translateY(-18px); }
     }
 
     @media (max-width: 1000px) {
@@ -167,6 +161,7 @@
     }
   </style>
 </head>
+
 <body>
 
   <div class="container">
@@ -188,8 +183,13 @@
       </button>
 
       <div class="footer-buttons">
-        <button class="footer-btn">Privacy Policy</button>
-        <button class="footer-btn">Credits</button>
+        <button class="footer-btn glow-btn" onclick="window.location.href='/privacypolicy'">
+          Privacy And Policy
+        </button>
+
+        <button class="footer-btn glow-btn" onclick="window.location.href='/credits'">
+          Credits
+        </button>
       </div>
     </div>
 
@@ -200,21 +200,6 @@
     </div>
 
   </div>
-
-  <!--
-  CREATE THIS FILE STRUCTURE FOR VERCEL/GITHUB:
-
-  index.html
-  games/
-    index.html
-
-  games/index.html should use the SAME background:
-
-  body {
-    background: linear-gradient(135deg, #020817, #06152e, #0a1f44);
-    color: white;
-  }
-  -->
 
 </body>
 </html>
