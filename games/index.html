@@ -14,30 +14,99 @@
       justify-content: center;
       align-items: center;
       font-family: Arial, sans-serif;
+      color: white;
+    }
+
+    /* MAIN CENTER FRAME */
+    .frame {
+      width: 80%;
+      max-width: 800px;
+      height: 500px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 20px;
+      padding: 20px;
+      overflow: hidden;
+      box-shadow: 0 0 30px rgba(0,0,0,0.4);
+    }
+
+    /* SCROLLING AREA */
+    .scroll {
+      height: 100%;
+      overflow-y: auto;
+      padding-right: 10px;
+    }
+
+    /* GAME CARD */
+    .game {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 20px;
+      margin-bottom: 15px;
+
+      background: #061a33;
+      border: 2px solid #3b82f6;
+      border-radius: 16px;
+      box-shadow: 0 0 15px rgba(59,130,246,0.4);
+    }
+
+    .game img {
+      width: 70px;
+      height: 70px;
+      border-radius: 12px;
+      object-fit: cover;
+    }
+
+    .title {
+      font-size: 1.2rem;
+      font-weight: bold;
+      flex: 1;
     }
 
     .btn {
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.2);
+      background: linear-gradient(135deg, #2563eb, #3b82f6);
+      border: none;
       color: white;
-      padding: 14px 24px;
-      border-radius: 14px;
+      padding: 10px 16px;
+      border-radius: 12px;
       cursor: pointer;
-      transition: 0.3s ease;
-      font-size: 1.1rem;
+      font-weight: bold;
+      transition: 0.3s;
     }
 
     .btn:hover {
-      background: rgba(255,255,255,0.15);
+      transform: scale(1.05);
+    }
+
+    /* SCROLLBAR */
+    .scroll::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .scroll::-webkit-scrollbar-thumb {
+      background: #3b82f6;
+      border-radius: 10px;
     }
   </style>
 </head>
 
 <body>
 
-  <button class="btn" onclick="window.location.href='https://gamingnow.vercel.app'">
-    ← Back to Home
-  </button>
+  <div class="frame">
+    <div class="scroll">
+
+      <!-- MINECRAFT FRAME -->
+      <div class="game">
+        <img src="https://www.image2url.com/r2/default/images/1778153300703-a3052538-043f-45db-ad29-dfce15665ba7.jpg" alt="Minecraft">
+        <div class="title">Minecraft</div>
+        <button class="btn" onclick="window.location.href='/games/minecraft.html'">
+          Play Minecraft
+        </button>
+      </div>
+
+    </div>
+  </div>
 
 </body>
 </html>
