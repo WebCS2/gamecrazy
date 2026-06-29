@@ -1,82 +1,202 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Free AI Image Generator</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenAI API Chat Interface</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 40px auto;
-            text-align: center;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
-
-        textarea {
+        .chat-container {
             width: 100%;
-            height: 100px;
-            padding: 10px;
+            max-width: 600px;
+            height: 80vh;
+            background: #ffffff;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
         }
-
-        button {
-            margin-top: 10px;
-            padding: 10px 20px;
-            cursor: pointer;
+        .chat-header {
+            background: #10a37f;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: bold;
         }
-
-        img {
-            margin-top: 20px;
-            max-width: 100%;
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .message {
+            max-width: 75%;
+            padding: 10px 15px;
+            border-radius: 15px;
+            line-height: 1.4;
+        }
+        .user-message {
+            background: #007bff;
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 2px;
+        }
+        .bot-message {
+            background: #f1f1f1;
+            color: #333;
+            align-self: flex-start;
+            border-bottom-left-radius: 2px;
+        }
+        .chat-input-area {
+            display: flex;
+            padding: 15px;
+            border-top: 1px solid #eee;
+            background: #fff;
+        }
+        .chat-input-area input {
+            flex: 1;
+            padding: 10px 15px;
             border: 1px solid #ccc;
+            border-radius: 20px;
+            outline: none;
+            font-size: 1rem;
+        }
+        .chat-input-area button {
+            background: #10a37f;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin-left: 10px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.2s;
+        }
+        .chat-input-area button:hover {
+            background: #0d8a6a;
+        }
+        .chat-input-area button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
         }
     </style>
 </head>
 <body>
 
-    <h1>AI Image Generator</h1>
+<div class="chat-container">
+    <div class="chat-header">OpenAI Assistant</div>
+    <div class="chat-messages" id="chatMessages">
+        <div class="message bot-message">Hello! How can I help you today?</div>
+    </div>
+    <div class="chat-input-area">
+        <input type="text" id="userInput" placeholder="Type your message here..." autocomplete="off">
+        <button id="sendBtn" onclick="sendMessage()">Send</button>
+    </div>
+</div>
 
-    <textarea id="prompt" placeholder="Enter your prompt..."></textarea>
-    <br>
-    <button onclick="generateImage()">Generate</button>
+<script>
+    // Configuration
+    const API_KEY = "f2865354-b2c7-46dd-a06a-97e756e98cb3";
+    const API_URL = "https://api.openai.com/v1/chat/completions"; 
+    const MODEL = "gpt-4o-mini"; // You can change this to "gpt-4o" or whichever model your key supports
 
-    <p id="status"></p>
+    // Conversation history to maintain context
+    let conversationHistory = [
+        { role: "system", content: "You are a helpful assistant." }
+    ];
 
-    <img id="result" alt="Generated image">
+    const chatMessages = document.getElementById('chatMessages');
+    const userInput = document.getElementById('userInput');
+    const sendBtn = document.getElementById('sendBtn');
 
-    <script>
-        async function generateImage() {
-            const prompt = document.getElementById("prompt").value;
-            const status = document.getElementById("status");
-            const result = document.getElementById("result");
-
-            status.textContent = "Generating...";
-
-            try {
-                const response = await fetch(
-                    "http://127.0.0.1:7860/sdapi/v1/txt2img",
-                    {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify({
-                            prompt: prompt,
-                            steps: 25,
-                            width: 512,
-                            height: 512
-                        })
-                    }
-                );
-
-                const data = await response.json();
-
-                result.src = "data:image/png;base64," + data.images[0];
-                status.textContent = "Done!";
-            } catch (error) {
-                console.error(error);
-                status.textContent =
-                    "Error. Make sure Stable Diffusion WebUI is running on port 7860.";
-            }
+    // Allow pressing "Enter" to send message
+    userInput.addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+            sendMessage();
         }
-    </script>
+    });
+
+    async function sendMessage() {
+        const text = userInput.value.trim();
+        if (!text) return;
+
+        // 1. Append User Message to UI
+        appendMessage(text, 'user-message');
+        userInput.value = '';
+        
+        // 2. Add to history
+        conversationHistory.push({ role: "user", content: text });
+
+        // Disable input while loading
+        userInput.disabled = true;
+        sendBtn.disabled = true;
+
+        // 3. Create placeholder for Bot response
+        const botMessageDiv = appendMessage("Thinking...", 'bot-message');
+
+        try {
+            // 4. Call OpenAI API
+            const response = await fetch(API_URL, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${API_KEY}`
+                },
+                body: JSON.stringify({
+                    model: MODEL,
+                    messages: conversationHistory
+                })
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error?.message || "Failed to fetch response");
+            }
+
+            const data = await response.json();
+            const reply = data.choices[0].message.content;
+
+            // 5. Update UI with final response
+            botMessageDiv.innerText = reply;
+
+            // 6. Add assistant reply to history
+            conversationHistory.push({ role: "assistant", content: reply });
+
+        } catch (error) {
+            console.error("API Error:", error);
+            botMessageDiv.innerText = "Error: " + error.message;
+            botMessageDiv.style.color = "red";
+        } finally {
+            // Re-enable inputs
+            userInput.disabled = false;
+            sendBtn.disabled = false;
+            userInput.focus();
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+    }
+
+    function appendMessage(text, className) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${className}`;
+        messageDiv.innerText = text;
+        chatMessages.appendChild(messageDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        return messageDiv;
+    }
+</script>
 
 </body>
-</html>    
+</html>
