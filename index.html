@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OpenAI API Chat Interface</title>
+    <title>DeepSeek API Chat Interface</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -27,7 +27,7 @@
             overflow: hidden;
         }
         .chat-header {
-            background: #10a37f;
+            background: #4d6bfe;
             color: white;
             padding: 15px;
             text-align: center;
@@ -47,9 +47,10 @@
             padding: 10px 15px;
             border-radius: 15px;
             line-height: 1.4;
+            white-space: pre-wrap; /* Preserves line breaks from the AI */
         }
         .user-message {
-            background: #007bff;
+            background: #4d6bfe;
             color: white;
             align-self: flex-end;
             border-bottom-right-radius: 2px;
@@ -75,7 +76,7 @@
             font-size: 1rem;
         }
         .chat-input-area button {
-            background: #10a37f;
+            background: #4d6bfe;
             color: white;
             border: none;
             padding: 10px 20px;
@@ -86,7 +87,7 @@
             transition: background 0.2s;
         }
         .chat-input-area button:hover {
-            background: #0d8a6a;
+            background: #3955db;
         }
         .chat-input-area button:disabled {
             background: #ccc;
@@ -97,7 +98,7 @@
 <body>
 
 <div class="chat-container">
-    <div class="chat-header">OpenAI Assistant</div>
+    <div class="chat-header">DeepSeek AI Assistant</div>
     <div class="chat-messages" id="chatMessages">
         <div class="message bot-message">Hello! How can I help you today?</div>
     </div>
@@ -109,9 +110,9 @@
 
 <script>
     // Configuration
-    const API_KEY = "f2865354-b2c7-46dd-a06a-97e756e98cb3";
-    const API_URL = "https://api.openai.com/v1/chat/completions"; 
-    const MODEL = "gpt-4o-mini"; // You can change this to "gpt-4o" or whichever model your key supports
+    const API_KEY = "b01611a6-9116-449e-b867-393e91779dfc";
+    const API_URL = "https://api.deepseek.com/v1/chat/completions"; 
+    const MODEL = "deepseek-chat"; // Uses DeepSeek-V3 / DeepSeek-R1 chat pipeline
 
     // Conversation history to maintain context
     let conversationHistory = [
@@ -122,7 +123,6 @@
     const userInput = document.getElementById('userInput');
     const sendBtn = document.getElementById('sendBtn');
 
-    // Allow pressing "Enter" to send message
     userInput.addEventListener("keypress", function(event) {
         if (event.key === "Enter") {
             sendMessage();
@@ -133,22 +133,22 @@
         const text = userInput.value.trim();
         if (!text) return;
 
-        // 1. Append User Message to UI
+        // 1. Append User Message
         appendMessage(text, 'user-message');
         userInput.value = '';
         
-        // 2. Add to history
+        // 2. Add to context history
         conversationHistory.push({ role: "user", content: text });
 
-        // Disable input while loading
+        // Disable UI controls while waiting
         userInput.disabled = true;
         sendBtn.disabled = true;
 
-        // 3. Create placeholder for Bot response
+        // 3. Create placeholder for DeepSeek response
         const botMessageDiv = appendMessage("Thinking...", 'bot-message');
 
         try {
-            // 4. Call OpenAI API
+            // 4. Send request to DeepSeek
             const response = await fetch(API_URL, {
                 method: "POST",
                 headers: {
@@ -157,30 +157,31 @@
                 },
                 body: JSON.stringify({
                     model: MODEL,
-                    messages: conversationHistory
+                    messages: conversationHistory,
+                    stream: false // Set to true if you ever want to implement chunk-by-chunk streaming
                 })
             });
 
             if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error?.message || "Failed to fetch response");
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(errorData.error?.message || `HTTP error! status: ${response.status}`);
             }
 
             const data = await response.json();
             const reply = data.choices[0].message.content;
 
-            // 5. Update UI with final response
+            // 5. Render final reply
             botMessageDiv.innerText = reply;
 
-            // 6. Add assistant reply to history
+            // 6. Record response into history
             conversationHistory.push({ role: "assistant", content: reply });
 
         } catch (error) {
-            console.error("API Error:", error);
-            botMessageDiv.innerText = "Error: " + error.message;
+            console.error("DeepSeek API Error:", error);
+            botMessageDiv.innerText = "Error fetching response: " + error.message;
             botMessageDiv.style.color = "red";
         } finally {
-            // Re-enable inputs
+            // Re-enable interface
             userInput.disabled = false;
             sendBtn.disabled = false;
             userInput.focus();
