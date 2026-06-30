@@ -1,202 +1,108 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DeepSeek API Chat Interface</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-        .chat-container {
-            width: 100%;
-            max-width: 600px;
-            height: 80vh;
-            background: #ffffff;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            border-radius: 8px;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-        .chat-header {
-            background: #4d6bfe;
-            color: white;
-            padding: 15px;
-            text-align: center;
-            font-size: 1.2rem;
-            font-weight: bold;
-        }
-        .chat-messages {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        .message {
-            max-width: 75%;
-            padding: 10px 15px;
-            border-radius: 15px;
-            line-height: 1.4;
-            white-space: pre-wrap; /* Preserves line breaks from the AI */
-        }
-        .user-message {
-            background: #4d6bfe;
-            color: white;
-            align-self: flex-end;
-            border-bottom-right-radius: 2px;
-        }
-        .bot-message {
-            background: #f1f1f1;
-            color: #333;
-            align-self: flex-start;
-            border-bottom-left-radius: 2px;
-        }
-        .chat-input-area {
-            display: flex;
-            padding: 15px;
-            border-top: 1px solid #eee;
-            background: #fff;
-        }
-        .chat-input-area input {
-            flex: 1;
-            padding: 10px 15px;
-            border: 1px solid #ccc;
-            border-radius: 20px;
-            outline: none;
-            font-size: 1rem;
-        }
-        .chat-input-area button {
-            background: #4d6bfe;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            margin-left: 10px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: background 0.2s;
-        }
-        .chat-input-area button:hover {
-            background: #3955db;
-        }
-        .chat-input-area button:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-        }
-    </style>
+<meta charset="UTF-8">
+<title>Free AI Chatbot (Working)</title>
+<style>
+  body {
+    background: #0b1220;
+    color: #f9fafb;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+  }
+  .chatbox {
+    width: 100%;
+    max-width: 600px;
+    background: #111827;
+    padding: 20px;
+    border-radius: 12px;
+  }
+  #messages {
+    height: 300px;
+    overflow-y: auto;
+    background: #1f2937;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+  }
+  .msg {
+    margin-bottom: 12px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    max-width: 80%;
+  }
+  .user { background: #3b82f6; margin-left: auto; }
+  .bot { background: #374151; margin-right: auto; }
+  input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    background: #1f2937;
+    color: #f9fafb;
+    border: 1px solid #374151;
+  }
+  button {
+    margin-top: 10px;
+    padding: 10px 16px;
+    border-radius: 8px;
+    background: #3b82f6;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+</style>
 </head>
 <body>
 
-<div class="chat-container">
-    <div class="chat-header">DeepSeek AI Assistant</div>
-    <div class="chat-messages" id="chatMessages">
-        <div class="message bot-message">Hello! How can I help you today?</div>
-    </div>
-    <div class="chat-input-area">
-        <input type="text" id="userInput" placeholder="Type your message here..." autocomplete="off">
-        <button id="sendBtn" onclick="sendMessage()">Send</button>
-    </div>
+<h1>AI Chatbot</h1>
+<p>Free replies, no API key, works in browser.</p>
+
+<div class="chatbox">
+  <div id="messages"></div>
+  <input id="input" type="text" placeholder="Type your message...">
+  <button onclick="sendMessage()">Send</button>
 </div>
 
 <script>
-    // Configuration
-    const API_KEY = "b01611a6-9116-449e-b867-393e91779dfc";
-    const API_URL = "https://api.deepseek.com/v1/chat/completions"; 
-    const MODEL = "deepseek-chat"; // Uses DeepSeek-V3 / DeepSeek-R1 chat pipeline
+function addMessage(text, sender) {
+  const messages = document.getElementById("messages");
+  const div = document.createElement("div");
+  div.className = "msg " + sender;
+  div.textContent = text;
+  messages.appendChild(div);
+  messages.scrollTop = messages.scrollHeight;
+}
 
-    // Conversation history to maintain context
-    let conversationHistory = [
-        { role: "system", content: "You are a helpful assistant." }
-    ];
+async function sendMessage() {
+  const input = document.getElementById("input");
+  const text = input.value.trim();
+  if (!text) return;
 
-    const chatMessages = document.getElementById('chatMessages');
-    const userInput = document.getElementById('userInput');
-    const sendBtn = document.getElementById('sendBtn');
+  addMessage(text, "user");
+  input.value = "";
 
-    userInput.addEventListener("keypress", function(event) {
-        if (event.key === "Enter") {
-            sendMessage();
-        }
-    });
+  addMessage("Thinking...", "bot");
 
-    async function sendMessage() {
-        const text = userInput.value.trim();
-        if (!text) return;
+  try {
+    const response = await fetch(
+      "https://text.pollinations.ai/api/text?text=" + encodeURIComponent(text)
+    );
 
-        // 1. Append User Message
-        appendMessage(text, 'user-message');
-        userInput.value = '';
-        
-        // 2. Add to context history
-        conversationHistory.push({ role: "user", content: text });
+    const data = await response.json();
 
-        // Disable UI controls while waiting
-        userInput.disabled = true;
-        sendBtn.disabled = true;
+    const reply = data.text || "AI could not generate a reply.";
 
-        // 3. Create placeholder for DeepSeek response
-        const botMessageDiv = appendMessage("Thinking...", 'bot-message');
+    const messages = document.getElementById("messages");
+    messages.lastChild.textContent = reply;
 
-        try {
-            // 4. Send request to DeepSeek
-            const response = await fetch(API_URL, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${API_KEY}`
-                },
-                body: JSON.stringify({
-                    model: MODEL,
-                    messages: conversationHistory,
-                    stream: false // Set to true if you ever want to implement chunk-by-chunk streaming
-                })
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json().catch(() => ({}));
-                throw new Error(errorData.error?.message || `HTTP error! status: ${response.status}`);
-            }
-
-            const data = await response.json();
-            const reply = data.choices[0].message.content;
-
-            // 5. Render final reply
-            botMessageDiv.innerText = reply;
-
-            // 6. Record response into history
-            conversationHistory.push({ role: "assistant", content: reply });
-
-        } catch (error) {
-            console.error("DeepSeek API Error:", error);
-            botMessageDiv.innerText = "Error fetching response: " + error.message;
-            botMessageDiv.style.color = "red";
-        } finally {
-            // Re-enable interface
-            userInput.disabled = false;
-            sendBtn.disabled = false;
-            userInput.focus();
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-    }
-
-    function appendMessage(text, className) {
-        const messageDiv = document.createElement('div');
-        messageDiv.className = `message ${className}`;
-        messageDiv.innerText = text;
-        chatMessages.appendChild(messageDiv);
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-        return messageDiv;
-    }
+  } catch (err) {
+    const messages = document.getElementById("messages");
+    messages.lastChild.textContent = "Error: AI failed to reply.";
+  }
+}
 </script>
 
 </body>
