@@ -1,179 +1,504 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MappingBaltic</title>
-    <style>
-        /* Base Reset & Theme */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 
-        body {
-            background-color: #0d0d13;
-            color: #ffffff;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            justify-content: space-between;
-            overflow-x: hidden;
-        }
+<title>MappingBaltic AI</title>
 
-        /* Container styling */
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 40px 20px;
-            text-align: center;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-        /* Neon Header */
-        h1 {
-            font-size: 3.5rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: #fff;
-            text-shadow: 
-                0 0 7px #fff,
-                0 0 10px #fff,
-                0 0 21px #00f3ff,
-                0 0 42px #00f3ff,
-                0 0 82px #00f3ff;
-            margin-bottom: 10px;
-            animation: pulse 2s infinite alternate;
-        }
+<style>
 
-        /* Neon Subtitle */
-        h2 {
-            font-size: 1.8rem;
-            color: #ff007f;
-            text-shadow: 0 0 10px #ff007f, 0 0 20px #ff007f;
-            margin-bottom: 40px;
-            font-weight: 600;
-        }
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Inter,sans-serif;
+}
 
-        /* Content Card */
-        .main-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 2px solid #00f3ff;
-            box-shadow: 0 0 15px rgba(0, 243, 255, 0.2), inset 0 0 15px rgba(0, 243, 255, 0.1);
-            border-radius: 16px;
-            padding: 30px;
-            backdrop-filter: blur(10px);
-            margin-bottom: 40px;
-            max-width: 600px;
-            transition: transform 0.3s ease;
-        }
+body{
 
-        .main-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 0 25px rgba(0, 243, 255, 0.4), inset 0 0 15px rgba(0, 243, 255, 0.2);
-        }
+background:
+radial-gradient(circle at top left,#7c3aed55,transparent 30%),
+radial-gradient(circle at bottom right,#06b6d455,transparent 35%),
+#070913;
 
-        .main-card p {
-            font-size: 1.2rem;
-            line-height: 1.6;
-            color: #e0e0e0;
-        }
+min-height:100vh;
+overflow-x:hidden;
+color:white;
 
-        .highlight {
-            color: #00f3ff;
-            font-weight: bold;
-        }
+}
 
-        /* Neon Button Link */
-        .tiktok-btn {
-            display: inline-block;
-            text-decoration: none;
-            color: #fff;
-            font-size: 1.1rem;
-            font-weight: 700;
-            padding: 15px 35px;
-            border: 2px solid #ff007f;
-            border-radius: 50px;
-            background: transparent;
-            cursor: pointer;
-            box-shadow: 0 0 10px rgba(255, 0, 127, 0.3);
-            transition: all 0.3s ease;
-            letter-spacing: 1px;
-        }
+body::before{
 
-        .tiktok-btn:hover {
-            background: #ff007f;
-            color: #fff;
-            box-shadow: 0 0 20px #ff007f, 0 0 40px #ff007f;
-            transform: scale(1.05);
-        }
+content:"";
+position:fixed;
+width:650px;
+height:650px;
+left:-150px;
+top:-150px;
 
-        /* Footer styling */
-        footer {
-            background: rgba(5, 5, 8, 0.8);
-            border-top: 1px solid rgba(255, 0, 127, 0.2);
-            padding: 25px 20px;
-            text-align: center;
-            width: 100%;
-        }
+background:#7c3aed;
+filter:blur(180px);
+opacity:.18;
 
-        .copyright-text {
-            font-size: 0.85rem;
-            color: #8c8c9e;
-            max-width: 800px;
-            margin: 0 auto;
-            line-height: 1.5;
-        }
+animation=float1 12s infinite alternate;
 
-        /* Subtle glowing animation for header */
-        @keyframes pulse {
-            0% {
-                text-shadow: 0 0 7px #fff, 0 0 10px #fff, 0 0 21px #00f3ff, 0 0 42px #00f3ff;
-            }
-            100% {
-                text-shadow: 0 0 10px #fff, 0 0 15px #fff, 0 0 25px #00f3ff, 0 0 55px #00f3ff, 0 0 90px #00f3ff;
-            }
-        }
+}
 
-        /* Responsive scaling */
-        @media (max-width: 600px) {
-            h1 { font-size: 2.5rem; }
-            h2 { font-size: 1.4rem; }
-            .main-card p { font-size: 1rem; }
-        }
-    </style>
+body::after{
+
+content:"";
+position:fixed;
+width:550px;
+height:550px;
+right:-150px;
+bottom:-150px;
+
+background:#06b6d4;
+filter:blur(180px);
+opacity:.15;
+
+animation=float2 10s infinite alternate;
+
+}
+
+@keyframes float1{
+
+to{
+
+transform:
+translate(180px,80px);
+
+}
+
+}
+
+@keyframes float2{
+
+to{
+
+transform:
+translate(-180px,-120px);
+
+}
+
+}
+
+.wrapper{
+
+width:min(950px,94%);
+margin:auto;
+padding:40px 0;
+position:relative;
+z-index:2;
+
+}
+
+.header{
+
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:25px;
+
+}
+
+.logo{
+
+font-size:34px;
+font-weight:800;
+
+background:
+linear-gradient(90deg,#ffffff,#8dc5ff);
+
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+
+}
+
+.tag{
+
+color:#9ca3af;
+margin-top:6px;
+
+}
+
+.card{
+
+background:rgba(255,255,255,.05);
+
+backdrop-filter:blur(20px);
+
+border:1px solid rgba(255,255,255,.08);
+
+border-radius:24px;
+
+padding:22px;
+
+box-shadow:
+0 0 50px rgba(124,58,237,.12);
+
+}
+
+.prompt{
+
+display:flex;
+gap:12px;
+margin-bottom:16px;
+flex-wrap:wrap;
+
+}
+
+input{
+
+flex:1;
+
+padding:16px;
+
+background:#101322;
+
+border:1px solid #23283d;
+
+border-radius:14px;
+
+color:white;
+
+outline:none;
+
+font-size:15px;
+
+}
+
+select{
+
+padding:16px;
+
+background:#101322;
+
+border:1px solid #23283d;
+
+border-radius:14px;
+
+color:white;
+
+font-size:15px;
+
+cursor:pointer;
+
+}
+
+button{
+
+padding:16px 28px;
+
+border:none;
+
+border-radius:14px;
+
+cursor:pointer;
+
+font-weight:700;
+
+background:
+linear-gradient(90deg,#7c3aed,#2563eb);
+
+color:white;
+
+transition:.25s;
+
+box-shadow:
+0 0 25px rgba(124,58,237,.45);
+
+}
+
+button:hover{
+
+transform:translateY(-2px);
+
+box-shadow:
+0 0 45px rgba(37,99,235,.45);
+
+}
+
+.preview{
+
+margin-top:18px;
+
+height:500px;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+background:#0d1220;
+
+border-radius:18px;
+
+overflow:hidden;
+
+border:1px solid rgba(255,255,255,.05);
+
+}
+
+canvas{
+
+max-width:100%;
+max-height:100%;
+
+display:none;
+
+}
+
+#status{
+
+color:#7b8193;
+
+}
+
+.actions{
+
+margin-top:18px;
+
+display:flex;
+justify-content:flex-end;
+
+}
+
+#download{
+
+display:none;
+
+}
+
+@media(max-width:700px){
+
+.prompt{
+
+flex-direction:column;
+
+}
+
+.preview{
+
+height:320px;
+
+}
+
+button{
+
+width:100%;
+
+}
+
+}
+
+</style>
 </head>
+
 <body>
 
-    <div class="container">
-        <!-- Website Name & Title -->
-        <h1>mappingbaltic</h1>
-        <h2>This is how i went from 0 followers to 100 followers</h2>
+<div class="wrapper">
 
-        <!-- Main Text Content Box -->
-        <div class="main-card">
-            <p>I started this TikTok account <span class="highlight">@mappingbaltic</span> in 2025 and now you can do it now too!</p>
-        </div>
+<div class="header">
 
-        <!-- Official TikTok Link Button -->
-        <a href="https://tiktok.com/@mappingbaltic" target="_blank" class="tiktok-btn">
-            Visit My Official TikTok
-        </a>
-    </div>
+<div>
 
-    <!-- Footer with Copyright Warning -->
-    <footer>
-        <p class="copyright-text">
-            <strong>Copyright Notice:</strong> Using or stealing my videos from my social medias is bad and i cant make money out of my content since im not monetized and i dont live in america, if i caught you stealing my videos or copying, or including in brand deals that i didnt do your videos will get copyright striked.
-        </p>
-    </footer>
+<div class="logo">✨ MappingBaltic AI</div>
 
+<div class="tag">
+Free AI Image Generator
+</div>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<div class="prompt">
+
+<input
+id="prompt"
+placeholder="Describe your image...">
+
+<select id="ratio">
+
+<option value="1:1">1:1</option>
+
+<option value="16:9">16:9</option>
+
+<option value="9:16">9:16</option>
+
+<option value="4:3">4:3</option>
+
+<option value="3:4">3:4</option>
+
+</select>
+
+<select id="quality">
+
+<option value="512">Fast</option>
+
+<option value="768">Medium</option>
+
+<option value="1024" selected>High</option>
+
+<option value="1536">Ultra</option>
+
+</select>
+
+<button onclick="generateImage()">
+Generate
+</button>
+
+</div>
+
+<div class="preview">
+
+<p id="status">
+Your generated image will appear here.
+</p>
+
+<canvas id="canvas"></canvas>
+
+</div>
+
+<div class="actions">
+
+<button
+id="download"
+onclick="downloadImage()">
+Download
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+const canvas=document.getElementById("canvas");
+const ctx=canvas.getContext("2d");
+
+const status=document.getElementById("status");
+const download=document.getElementById("download");
+
+function getSize(){
+
+const q=parseInt(document.getElementById("quality").value);
+const r=document.getElementById("ratio").value;
+
+let w=q,h=q;
+
+switch(r){
+
+case "16:9":
+w=q;
+h=Math.round(q*9/16);
+break;
+
+case "9:16":
+h=q;
+w=Math.round(q*9/16);
+break;
+
+case "4:3":
+w=q;
+h=Math.round(q*3/4);
+break;
+
+case "3:4":
+h=q;
+w=Math.round(q*3/4);
+break;
+
+}
+
+return {w,h};
+
+}
+
+async function generateImage(){
+
+const prompt=document.getElementById("prompt").value.trim();
+
+if(prompt===""){
+alert("Enter a prompt.");
+return;
+}
+
+status.style.display="block";
+status.textContent="Generating image...";
+
+canvas.style.display="none";
+download.style.display="none";
+
+const {w,h}=getSize();
+
+const seed=Math.floor(Math.random()*99999999);
+
+const img=new Image();
+
+/* Some browsers require CORS for canvas access. */
+img.crossOrigin="anonymous";
+
+img.onload=function(){
+
+canvas.width=img.width;
+canvas.height=img.height;
+
+ctx.drawImage(img,0,0);
+
+ctx.fillStyle="rgba(255,255,255,.75)";
+ctx.font=`${Math.max(18,canvas.width/42)}px Inter`;
+
+ctx.textAlign="right";
+ctx.textBaseline="bottom";
+
+ctx.fillText(
+"MappingbalticAI.vercel.app",
+canvas.width-20,
+canvas.height-20
+);
+
+status.style.display="none";
+
+canvas.style.display="block";
+
+download.style.display="inline-block";
+
+};
+
+img.onerror=function(){
+
+status.textContent="Failed to generate image.";
+
+};
+
+img.src=
+`https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=${w}&height=${h}&seed=${seed}`;
+
+}
+
+function downloadImage(){
+
+const link=document.createElement("a");
+
+link.download="mappingbaltic-ai.png";
+
+link.href=canvas.toDataURL("image/png");
+
+link.click();
+
+}
+
+</script>
 </body>
 </html>
