@@ -3,201 +3,177 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DeepSeek API Chat Interface</title>
+    <title>MappingBaltic</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
+        /* Base Reset & Theme */
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #0d0d13;
+            color: #ffffff;
             display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            justify-content: space-between;
+            overflow-x: hidden;
+        }
+
+        /* Container styling */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            text-align: center;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 100vh;
         }
-        .chat-container {
-            width: 100%;
+
+        /* Neon Header */
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #fff;
+            text-shadow: 
+                0 0 7px #fff,
+                0 0 10px #fff,
+                0 0 21px #00f3ff,
+                0 0 42px #00f3ff,
+                0 0 82px #00f3ff;
+            margin-bottom: 10px;
+            animation: pulse 2s infinite alternate;
+        }
+
+        /* Neon Subtitle */
+        h2 {
+            font-size: 1.8rem;
+            color: #ff007f;
+            text-shadow: 0 0 10px #ff007f, 0 0 20px #ff007f;
+            margin-bottom: 40px;
+            font-weight: 600;
+        }
+
+        /* Content Card */
+        .main-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 2px solid #00f3ff;
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.2), inset 0 0 15px rgba(0, 243, 255, 0.1);
+            border-radius: 16px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            margin-bottom: 40px;
             max-width: 600px;
-            height: 80vh;
-            background: #ffffff;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            border-radius: 8px;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
+            transition: transform 0.3s ease;
         }
-        .chat-header {
-            background: #4d6bfe;
-            color: white;
-            padding: 15px;
-            text-align: center;
+
+        .main-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 25px rgba(0, 243, 255, 0.4), inset 0 0 15px rgba(0, 243, 255, 0.2);
+        }
+
+        .main-card p {
             font-size: 1.2rem;
+            line-height: 1.6;
+            color: #e0e0e0;
+        }
+
+        .highlight {
+            color: #00f3ff;
             font-weight: bold;
         }
-        .chat-messages {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        .message {
-            max-width: 75%;
-            padding: 10px 15px;
-            border-radius: 15px;
-            line-height: 1.4;
-            white-space: pre-wrap;
-        }
-        .user-message {
-            background: #4d6bfe;
-            color: white;
-            align-self: flex-end;
-            border-bottom-right-radius: 2px;
-        }
-        .bot-message {
-            background: #f1f1f1;
-            color: #333;
-            align-self: flex-start;
-            border-bottom-left-radius: 2px;
-        }
-        .chat-input-area {
-            display: flex;
-            padding: 15px;
-            border-top: 1px solid #eee;
-            background: #fff;
-        }
-        .chat-input-area input {
-            flex: 1;
-            padding: 10px 15px;
-            border: 1px solid #ccc;
-            border-radius: 20px;
-            outline: none;
-            font-size: 1rem;
-        }
-        .chat-input-area button {
-            background: #4d6bfe;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            margin-left: 10px;
-            border-radius: 20px;
+
+        /* Neon Button Link */
+        .tiktok-btn {
+            display: inline-block;
+            text-decoration: none;
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: 700;
+            padding: 15px 35px;
+            border: 2px solid #ff007f;
+            border-radius: 50px;
+            background: transparent;
             cursor: pointer;
-            font-size: 1rem;
-            transition: background 0.2s;
+            box-shadow: 0 0 10px rgba(255, 0, 127, 0.3);
+            transition: all 0.3s ease;
+            letter-spacing: 1px;
         }
-        .chat-input-area button:hover {
-            background: #3955db;
+
+        .tiktok-btn:hover {
+            background: #ff007f;
+            color: #fff;
+            box-shadow: 0 0 20px #ff007f, 0 0 40px #ff007f;
+            transform: scale(1.05);
         }
-        .chat-input-area button:disabled {
-            background: #ccc;
-            cursor: not-allowed;
+
+        /* Footer styling */
+        footer {
+            background: rgba(5, 5, 8, 0.8);
+            border-top: 1px solid rgba(255, 0, 127, 0.2);
+            padding: 25px 20px;
+            text-align: center;
+            width: 100%;
+        }
+
+        .copyright-text {
+            font-size: 0.85rem;
+            color: #8c8c9e;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+
+        /* Subtle glowing animation for header */
+        @keyframes pulse {
+            0% {
+                text-shadow: 0 0 7px #fff, 0 0 10px #fff, 0 0 21px #00f3ff, 0 0 42px #00f3ff;
+            }
+            100% {
+                text-shadow: 0 0 10px #fff, 0 0 15px #fff, 0 0 25px #00f3ff, 0 0 55px #00f3ff, 0 0 90px #00f3ff;
+            }
+        }
+
+        /* Responsive scaling */
+        @media (max-width: 600px) {
+            h1 { font-size: 2.5rem; }
+            h2 { font-size: 1.4rem; }
+            .main-card p { font-size: 1rem; }
         }
     </style>
 </head>
 <body>
 
-<div class="chat-container">
-    <div class="chat-header">DeepSeek AI Assistant</div>
-    <div class="chat-messages" id="chatMessages">
-        <div class="message bot-message">Hello! How can I help you today?</div>
+    <div class="container">
+        <!-- Website Name & Title -->
+        <h1>mappingbaltic</h1>
+        <h2>This is how i went from 0 followers to 100 followers</h2>
+
+        <!-- Main Text Content Box -->
+        <div class="main-card">
+            <p>I started this TikTok account <span class="highlight">@mappingbaltic</span> in 2025 and now you can do it now too!</p>
+        </div>
+
+        <!-- Official TikTok Link Button -->
+        <a href="https://tiktok.com/@mappingbaltic" target="_blank" class="tiktok-btn">
+            Visit My Official TikTok
+        </a>
     </div>
-    <div class="chat-input-area">
-        <input type="text" id="userInput" placeholder="Type your message here..." autocomplete="off">
-        <button id="sendBtn" onclick="sendMessage()">Send</button>
-    </div>
-</div>
 
-<script>
-    // Configuration
-    const API_KEY = "b01611a6-9116-449e-b867-393e91779dfc";
-    
-    // We route through a public CORS proxy to allow browser-based testing
-    const CORS_PROXY = "https://cors-anywhere.herokuapp.com/";
-    const TARGET_URL = "https://api.deepseek.com/chat/completions";
-    const API_URL = CORS_PROXY + TARGET_URL; 
-
-    // DeepSeek current primary flagship models
-    const MODEL = "deepseek-v4-flash"; 
-
-    let conversationHistory = [
-        { role: "system", content: "You are a helpful assistant." }
-    ];
-
-    const chatMessages = document.getElementById('chatMessages');
-    const userInput = document.getElementById('userInput');
-    const sendBtn = document.getElementById('sendBtn');
-
-    userInput.addEventListener("keypress", function(event) {
-        if (event.key === "Enter") {
-            sendMessage();
-        }
-    });
-
-    async function sendMessage() {
-        const text = userInput.value.trim();
-        if (!text) return;
-
-        appendMessage(text, 'user-message');
-        userInput.value = '';
-        
-        conversationHistory.push({ role: "user", content: text });
-
-        userInput.disabled = true;
-        sendBtn.disabled = true;
-
-        const botMessageDiv = appendMessage("Thinking...", 'bot-message');
-
-        try {
-            const response = await fetch(API_URL, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${API_KEY}`,
-                    "X-Requested-With": "XMLHttpRequest" // Required by some proxies
-                },
-                body: JSON.stringify({
-                    model: MODEL,
-                    messages: conversationHistory
-                })
-            });
-
-            if (!response.ok) {
-                const errorText = await response.text();
-                // Check if the proxy itself is asking for access activation
-                if (errorText.includes("cors-anywhere")) {
-                    throw new Error("Proxy requires activation. Please visit https://cors-anywhere.herokuapp.com/corsdemo and click 'Request temporary access', then try again.");
-                }
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const data = await response.json();
-            const reply = data.choices[0].message.content;
-
-            botMessageDiv.innerText = reply;
-            conversationHistory.push({ role: "assistant", content: reply });
-
-        } catch (error) {
-            console.error("DeepSeek API Error:", error);
-            botMessageDiv.innerText = "Error: " + error.message;
-            botMessageDiv.style.color = "red";
-        } finally {
-            userInput.disabled = false;
-            sendBtn.disabled = false;
-            userInput.focus();
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-    }
-
-    function appendMessage(text, className) {
-        const messageDiv = document.createElement('div');
-        messageDiv.className = `message ${className}`;
-        messageDiv.innerText = text;
-        chatMessages.appendChild(messageDiv);
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-        return messageDiv;
-    }
-</script>
+    <!-- Footer with Copyright Warning -->
+    <footer>
+        <p class="copyright-text">
+            <strong>Copyright Notice:</strong> Using or stealing my videos from my social medias is bad and i cant make money out of my content since im not monetized and i dont live in america, if i caught you stealing my videos or copying, or including in brand deals that i didnt do your videos will get copyright striked.
+        </p>
+    </footer>
 
 </body>
 </html>
